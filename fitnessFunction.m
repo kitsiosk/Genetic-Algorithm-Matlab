@@ -1,4 +1,4 @@
-function f=fitnessFunction(x,V)
+function f=fitnessFunction(x, V, version)
 c=[59.85 ;43.05 ;53.55 ;26.25 ;44.1 ;64.05 ;36.75 ;35.7 ;13.65 ;21 ;54.6 ;63 ;33.6 ;54.6 ;46.2 ;31.5];
 % Equality restrictions array. All of its elements has to be zero
 g = zeros(9, 1);
@@ -20,9 +20,22 @@ end
 
 % Set a penalty each time one of the equality restrictions is different
 % than zero
-
-for i=1:9
-    f = f + abs(g(i))*10000;
+if version == 'B'
+    for i=1:9
+        f = f + abs(g(i))*10000;
+    end
+elseif version == 'C'
+    for i=2:8
+        f = f + abs(g(i))*10000;
+    end
+    if g(1) < -0.1*V || g(1) > 0.1*V
+        f = f + 10000*(abs(g(1)) - 0.1*V);
+    end
+    if g(9) < -0.1*V || g(9) > 0.1*V
+        f = f + 10000*(abs(g(9)) - 0.1*V);
+    end
+else
+    fprintf("Invalid version\n");
 end
 
 end
